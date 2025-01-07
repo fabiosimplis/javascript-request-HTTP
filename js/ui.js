@@ -48,9 +48,26 @@ const ui = {
         iconeEditar.alt = "Botão Editar";
         botaoEditar.appendChild(iconeEditar);
 
+        const botaoExcluir = document.createElement("button");
+        botaoExcluir.classList.add("botao-excluir");
+        botaoExcluir.onclick = async () => {
+            try {
+                await api.excluirPensamento(pensamento.id);
+                ui.renderizarPensamentos();
+            } catch (error) {
+                alert(`ERROR: Erro ao excluir pensamento de id: ${pensamento.id}`);
+            }
+        }
+
+        const iconeExcluir = document.createElement("img");
+        iconeExcluir.src = "./assets/imagens/icone-excluir.png";
+        iconeExcluir.alt = "Botão Excluir";
+        botaoExcluir.appendChild(iconeExcluir);
+
         const divIcones = document.createElement("div");
         divIcones.classList.add("icones");
         divIcones.appendChild(botaoEditar);
+        divIcones.appendChild(botaoExcluir);
 
         li.appendChild(iconesAspas);
         li.appendChild(pensamentoConteudo);
