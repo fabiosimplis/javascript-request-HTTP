@@ -26,7 +26,7 @@ const api = {
         }
     },
 
-    async buscarPensamento(id) {
+    async buscarPensamentoPorId(id) {
         try {
             const response = await fetch (`http://localhost:3000/pensamentos/${id}`);
             return await response.json();
@@ -36,7 +36,7 @@ const api = {
         }
     },
 
-    async editarPensamentos(pensamento) {
+    async editarPensamento(pensamento) {
         try {
             const response = await fetch (`http://localhost:3000/pensamentos/${pensamento.id}`, {
                 method: "PUT",
