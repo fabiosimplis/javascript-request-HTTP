@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     //Submetendo o formulário para criar um novo dado
     const formularioPensamento = document.getElementById("pensamento-form");
     formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
+
+    const btnCancelar = document.getElementById("botao-cancelar");
+    btnCancelar.addEventListener("click", () => {
+        document.getElementById("pensamento-form").reset();
+    });
 });
 
 async function manipularSubmissaoFormulario(evento) {
