@@ -24,7 +24,33 @@ const api = {
             alert('ERROR: Busca de pensamentos');
             throw error;
         }
-    }
+    },
+
+    async buscarPensamento(id) {
+        try {
+            const response = await fetch (`http://localhost:3000/pensamentos/${id}`);
+            return await response.json();
+        } catch {
+            alert(`ERROR: Busca de pensamento de id: ${id}`);
+            throw error;
+        }
+    },
+
+    async editarPensamentos(pensamento) {
+        try {
+            const response = await fetch (`http://localhost:3000/pensamentos/${pensamento.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(pensamento)
+            });
+            return await response.json();
+        } catch {
+            alert('ERROR: Ao editar pensamento');
+            throw error;
+        }
+    },
 }
 
 export default api;
