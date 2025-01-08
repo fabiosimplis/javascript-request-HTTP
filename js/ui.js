@@ -75,8 +75,17 @@ const ui = {
         iconeExcluir.alt = "Botão Excluir";
         botaoExcluir.appendChild(iconeExcluir);
 
+        const botaoFavorito = document.createElement("button");
+        botaoFavorito.classList.add("botao-favorito");
+
+        const iconeFavorito = document.createElement("img");
+        iconeFavorito.src = "./assets/imagens/icone-favorito_outline.png";
+        iconeFavorito.alt = "Ícone de Favorito";
+        botaoFavorito.appendChild(iconeFavorito);
+
         const divIcones = document.createElement("div");
         divIcones.classList.add("icones");
+        divIcones.appendChild(botaoFavorito);
         divIcones.appendChild(botaoEditar);
         divIcones.appendChild(botaoExcluir);
 
