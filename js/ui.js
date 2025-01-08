@@ -7,6 +7,9 @@ const ui = {
         document.getElementById("pensamento-id").value = pensamento.id;
         document.getElementById("pensamento-conteudo").value = pensamento.conteudo;
         document.getElementById("pensamento-autoria").value = pensamento.autoria;
+        document.getElementById("pensamento-data").value = pensamento.data.toISOString().split('T')[0];
+        // Ajustando foco da app
+        document.getElementById("form-container").scrollIntoView();
     },
 
     async renderizarPensamentos(pensamentosFiltrados = null) {
@@ -49,6 +52,18 @@ const ui = {
         const pensamentoAutoria = document.createElement("div");
         pensamentoAutoria.textContent = pensamento.autoria;
         pensamentoAutoria.classList.add("pensamento-autoria");
+
+        let options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'UTC'
+        }
+        const pensamentoData = document.createElement("div");
+        // pensamentoData.textContent = pensamento.data.toLocaleDateString('pt-BR');
+        pensamentoData.textContent = pensamento.data.toLocaleDateString('pt-BR', options);
+        pensamentoData.classList.add("pensamento-data");
 
         const botaoEditar = document.createElement("button");
         botaoEditar.classList.add("botao-editar");
@@ -102,6 +117,7 @@ const ui = {
         li.appendChild(iconesAspas);
         li.appendChild(pensamentoConteudo);
         li.appendChild(pensamentoAutoria);
+        li.appendChild(pensamentoData);
         li.appendChild(divIcones);
         listaPensamentos.appendChild(li);
     },
