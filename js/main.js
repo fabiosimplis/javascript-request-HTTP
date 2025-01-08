@@ -1,8 +1,22 @@
 import ui from "./ui.js";
 import api from "./api.js"
 
+const pensamentosSet = new Set();
 const regexConteudo = /^[A-Za-z\s]{10,}$/;
 const regexAutoria = /^[A-Za-z]{3,15}$/;
+
+async function adicionarChaveAoPensamento() {
+    try {
+        const pensamentos = await api.buscarPensamentos();
+        pensamentos.forEach(pensamento => {
+            const chavePensamento = `${pensamento.conteudo.trim().toLowerCase()}-${pensamento.autoria.trim().toLowerCase()}`;
+            pensamentosSet.add(chavePensamento);
+        });
+    } catch (error) {
+        alert('ERROR: Ao adicionar chave em Set de pensamentos');
+        throw error;
+    }
+}
 
 function validarConteudo(conteudo) {
     return regexConteudo.test(conteudo);
@@ -18,6 +32,7 @@ function removerEspacos(str){
 
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
+    adicionarChaveAoPensamento();
     //Submetendo o formulário para criar um novo dado
     const formularioPensamento = document.getElementById("pensamento-form");
     formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
@@ -52,6 +67,13 @@ async function manipularSubmissaoFormulario(evento) {
 
     if(!validarData(data)){
         alert("Não é permitido cadastro de datas futuras!!!");
+        return;
+    }
+
+    const chaveNovoPensamento = `${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}`;
+
+    if (pensamentosSet.has(chaveNovoPensamento)) {
+        alert("ERROR: pensamento já existente");
         return;
     }
 
