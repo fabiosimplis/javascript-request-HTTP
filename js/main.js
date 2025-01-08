@@ -12,6 +12,10 @@ function validarAutoria(autoria) {
     return regexAutoria.test(autoria);
 }
 
+function removerEspacos(str){
+    return str.replaceAll(/\s+/g, '');
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
     //Submetendo o formulário para criar um novo dado
@@ -33,13 +37,15 @@ async function manipularSubmissaoFormulario(evento) {
     const conteudo = document.getElementById("pensamento-conteudo").value;
     const autoria = document.getElementById("pensamento-autoria").value;
     const data = document.getElementById("pensamento-data").value;
-    
-    if(!validarConteudo(conteudo)){
+    const conteudoSemEspaco = removerEspacos(conteudo);
+    const autoriaSemEspaco = removerEspacos(autoria);
+
+    if(!validarConteudo(conteudoSemEspaco)){
         alert("É permitida a inclusão apenas de letras e espaços com no mínimo 10 caracteres");
         return;
     }
 
-    if(!validarAutoria(autoria)){
+    if(!validarAutoria(autoriaSemEspaco)){
         alert("Somente é permitida autoria apenas de letras com no mínimo 3 e máximo de 15 caracteres!!");
         return;
     }
