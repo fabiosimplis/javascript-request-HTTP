@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCancelar.addEventListener("click", () => {
         document.getElementById("pensamento-form").reset();
     });
+
+    const inputBusca = document.getElementById("campo-busca");
+    inputBusca.addEventListener("input", manipularBusca);
 });
 
 async function manipularSubmissaoFormulario(evento) {
@@ -24,5 +27,15 @@ async function manipularSubmissaoFormulario(evento) {
         ui.renderizarPensamentos();
     } catch {
         alert("ERROR: Não foi possível salvar pensamentos");
+    }
+}
+
+async function manipularBusca() {
+    const termoBusca = document.getElementById("campo-busca").value;
+    try {
+        const pensamentosFiltrados = await api.buscarPensamentosPorTermo(termoBusca);
+        ui.renderizarPensamentos(pensamentosFiltrados);
+    } catch (error) {
+        alert("ERROR: ao fazer a busca");
     }
 }

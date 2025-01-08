@@ -50,6 +50,18 @@ const api = {
             throw error;
         }
     },
+
+    async buscarPensamentosPorTermo(termo) {
+        try {
+            const pensamentos = await this.buscarPensamentos();
+            return pensamentos.filter(pensamento => {
+                return (pensamento.conteudo.toLowerCase().includes(termo.toLowerCase())) || (pensamento.autoria.toLowerCase().includes(termo.toLowerCase()));
+            });
+        } catch (error){
+            alert("ERROR: Ao filtrar pensamentos");
+            throw error;
+        }
+    }
 }
 
 export default api;
