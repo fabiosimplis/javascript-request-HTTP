@@ -54,15 +54,13 @@ const api = {
     async buscarPensamentosPorTermo(termo) {
         try {
             const pensamentos = await this.buscarPensamentos();
-
-            const pensamentosFiltrados = pensamentos.filter(pensamento => {
+            return pensamentos.filter(pensamento => {
                 return (pensamento.conteudo.toLowerCase().includes(termo.toLowerCase())) || (pensamento.autoria.toLowerCase().includes(termo.toLowerCase()));
             });
         } catch (error){
             alert("ERROR: Ao filtrar pensamentos");
             throw error;
         }
-        
     }
 }
 
