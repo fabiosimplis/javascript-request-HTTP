@@ -1,5 +1,19 @@
 const URL_BASE = 'http://localhost:3000';
 
+const converteStringParaDataUTC = (dataString) => {
+    //2025-08-12 = [2024, 8, 12]
+    const [ano, mes, dia] = dataString.split("-");
+    const data = new Date(Date.UTC(ano, mes-1, dia));
+    const now = new Date();
+    
+    // Atualiza a data para incluir a hora exata
+    data.setUTCHours(now.getUTCHours());
+    data.setUTCMinutes(now.getUTCMinutes());
+    data.setUTCSeconds(now.getUTCSeconds());
+    data.setUTCMilliseconds(now.getUTCMilliseconds());
+    return data;
+}
+
 const api = {
 
     async buscarPensamentos() {
@@ -14,10 +28,14 @@ const api = {
 
     async salvarPensamentos(pensamento) {
         try {
-            const response = await axios.post(`${URL_BASE}/pensamentos`, pensamento);
+            const data = converteStringParaDataUTC(pensamento.data);
+            const response = await axios.post(`${URL_BASE}/pensamentos`, {
+                ...pensamento,
+                data
+            });
             return await response.data;
         } catch {
-            alert('ERROR: Busca de pensamentos');
+            alert('ERROR: Ao Salvar o pensamento');
             throw error;
         }
     },
@@ -34,7 +52,12 @@ const api = {
 
     async editarPensamento(pensamento) {
         try {
-            const response = await axios.put(`${URL_BASE}/pensamentos/${pensamento.id}`, pensamento);
+            const data = converteStringParaDataUTC(pensamento.data);
+            const response = await axios.put(`${URL_BASE}/pensamentos/${pensamento.id}`, {
+                ...pensamento,
+                data
+        });
+
             return await response.data;
         } catch {
             alert('ERROR: Ao editar pensamento');
@@ -71,7 +94,7 @@ const api = {
             alert("ERRO: Erro ao favoritar.");
             throw error;
         }
-    }
+    },
 }
 
 export default api;
