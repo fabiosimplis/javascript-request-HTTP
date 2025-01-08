@@ -7,20 +7,27 @@ const ui = {
         document.getElementById("pensamento-id").value = pensamento.id;
         document.getElementById("pensamento-conteudo").value = pensamento.conteudo;
         document.getElementById("pensamento-autoria").value = pensamento.autoria;
+        document.getElementById("pensamento-data").value = pensamento.data.toISOString().split('T')[0];
+        // Ajustando foco da app
+        document.getElementById("form-container").scrollIntoView();
     },
 
-    async renderizarPensamentos() {
+    async renderizarPensamentos(pensamentosFiltrados = null) {
         const listaPensamentos = document.getElementById("lista-pensamentos");
         const mensagemVazia = document.getElementById("mensagem-vazia");
         listaPensamentos.innerHTML = "";
-
         try {
-            const pensamentos = await api.buscarPensamentos();
-            if (pensamentos.length === 0) {
+            let pensamentosParaRenderizar;
+            if (pensamentosFiltrados) {
+                pensamentosParaRenderizar = pensamentosFiltrados;
+            } else {
+                pensamentosParaRenderizar = await api.buscarPensamentos()
+            }
+            if (pensamentosParaRenderizar.length === 0) {
                 mensagemVazia.style.display = "block";
             } else {
                 mensagemVazia.style.display = "none";
-                pensamentos.forEach(ui.adicionarPensamentoNaLista);
+                pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista);
             }
         } catch {
             alert('Erro ao renderizar pensamentos')
@@ -45,6 +52,20 @@ const ui = {
         const pensamentoAutoria = document.createElement("div");
         pensamentoAutoria.textContent = pensamento.autoria;
         pensamentoAutoria.classList.add("pensamento-autoria");
+
+        let options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'UTC'
+        }
+        const pensamentoData = document.createElement("div");
+        // pensamentoData.textContent = pensamento.data.toLocaleDateString('pt-BR');
+        const dataFormatada = pensamento.data.toLocaleDateString('pt-BR', options);
+        const dataComRegex = dataFormatada.replace(/^(\w)/, (match) => match.toUpperCase());
+        pensamentoData.textContent = dataComRegex;
+        pensamentoData.classList.add("pensamento-data");
 
         const botaoEditar = document.createElement("button");
         botaoEditar.classList.add("botao-editar");
@@ -71,14 +92,34 @@ const ui = {
         iconeExcluir.alt = "Botão Excluir";
         botaoExcluir.appendChild(iconeExcluir);
 
+        const botaoFavorito = document.createElement("button");
+        botaoFavorito.classList.add("botao-favorito");
+        botaoFavorito.onclick = async () => {
+            try {
+                await api.atualizarFavorito(pensamento.id, !pensamento.favorito);
+                ui.renderizarPensamentos();
+            } catch (error) {
+                alert("ERROR: ao atualizar o pensamento");
+            }
+        }
+
+        const iconeFavorito = document.createElement("img");
+        iconeFavorito.src = pensamento.favorito ? 
+        "./assets/imagens/icone-favorito.png" :
+        "./assets/imagens/icone-favorito_outline.png";
+        iconeFavorito.alt = "Ícone de Favorito";
+        botaoFavorito.appendChild(iconeFavorito);
+
         const divIcones = document.createElement("div");
         divIcones.classList.add("icones");
+        divIcones.appendChild(botaoFavorito);
         divIcones.appendChild(botaoEditar);
         divIcones.appendChild(botaoExcluir);
 
         li.appendChild(iconesAspas);
         li.appendChild(pensamentoConteudo);
         li.appendChild(pensamentoAutoria);
+        li.appendChild(pensamentoData);
         li.appendChild(divIcones);
         listaPensamentos.appendChild(li);
     },
